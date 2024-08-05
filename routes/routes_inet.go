@@ -61,8 +61,11 @@ func InetRoutes(app *fiber.App) {
 	pro := v1.Group("/pro")
 	pro.Get("", c.GetUsers)
 	pro.Get("/filter", c.GetUser)
+	pro.Get("/json", c.GetUsersJson)
 	pro.Post("/", c.AddUser)
 	pro.Put("/:id", c.UpdateUser)
 	pro.Delete("/:id", c.RemoveUser)
+	pro.Get("/history", c.GetDeleteUsers)
+	pro.Get("/between", c.GetBetweenUsers)
 	//
 }

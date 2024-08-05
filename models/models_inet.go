@@ -68,3 +68,19 @@ type Users struct {
 	Email      string    `json:"email"`
 	Tel        string    `json:"tel"`
 }
+
+type UsersRes struct {
+	Name       string `json:"name"`
+	EmployeeID int    `json:"employee_id"`
+	Age        int    `json:"age"`
+	Type       string `json:"type"`
+}
+
+type ResultUsersData struct {
+	Data            []UsersRes `json:"data"`
+	GenZ_Sum        int        `json:"genZ_sum"`
+	GenY_Sum        int        `json:"genY_sum"`
+	GenX_Sum        int        `json:"genX_sum"`
+	Baby_Boomer_Sum int        `json:"baby_boomer_sum"`
+	GIGen_Sum       int        `json:"GIgen_sum"`
+}
