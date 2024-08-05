@@ -326,6 +326,66 @@ func RemoveUser(c *fiber.Ctx) error {
 	return c.SendStatus(200)
 }
 
+func GetUsersJson(c *fiber.Ctx) error {
+	db := database.DBConn
+	var users []m.Users
+
+	db.Find(&users)
+
+	var dataResults []m.UsersRes
+	var GenZCount, GenYCount, GenXCount, BabyBoomerCount, GIGenCount int
+	for _, v := range users {
+		typeStr := ""
+		if v.Age < 24 {
+			typeStr = "GenZ"
+			GenZCount++
+		} else if v.Age >= 24 && v.Age <= 41 {
+			typeStr = "GenY"
+			GenYCount++
+		} else if v.Age >= 42 && v.Age <= 56 {
+			typeStr = "GenX"
+			GenXCount++
+		} else if v.Age >= 57 && v.Age <= 75 {
+			typeStr = "Baby Boomer"
+			BabyBoomerCount++
+		} else {
+			typeStr = "G.I. Generation"
+			GIGenCount++
+		}
+
+		d := m.UsersRes{
+			Name:       v.Name,
+			EmployeeID: v.EmployeeID,
+			Age:        v.Age,
+			Type:       typeStr,
+		}
+		dataResults = append(dataResults, d)
+	}
+	r := m.ResultUsersData{
+		Data:            dataResults,
+		GenZ_Sum:        GenZCount,
+		GenY_Sum:        GenYCount,
+		GenX_Sum:        GenXCount,
+		Baby_Boomer_Sum: BabyBoomerCount,
+		GIGen_Sum:       GIGenCount,
+	}
+	return c.Status(200).JSON(r)
+}
+
+func GetDeleteUsers(c *fiber.Ctx) error {
+	db := database.DBConn
+	var users []m.Users
+	db.Unscoped().Where("deleted_at IS NO NULL").Find(&users)
+	return c.Status(200).JSON(users)
+}
+
+func GetBetweenUsers(c *fiber.Ctx) error {
+	db := database.DBConn
+	var users []m.Users
+	db.Where("employee_id BETWEEN ? AND ?", 50, 10).Find(&users)
+	return c.Status(200).JSON(users)
+}
+
 //CRUD project
 
 // 5.1
